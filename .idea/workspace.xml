@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1d67408e-46f6-4ac6-8181-44837df2df07" name="Changes" comment="test">
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/aemo/ui/MyButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/aemo/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/aemo/R2JGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/aemo/R2JGUI.java" afterDir="false" />
-    </list>
+    <list default="true" id="1d67408e-46f6-4ac6-8181-44837df2df07" name="Changes" comment="new ui" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,9 +24,17 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Admin/R2J/src/main/java/me/aemo"
+    "last_opened_file_path": "C:/Users/Admin/R2J/src/main/java/me/aemo",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Admin\R2J\src\main\java\me\aemo" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -48,11 +52,28 @@
       <option name="project" value="LOCAL" />
       <updated>1730127000090</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="new ui">
+      <option name="closed" value="true" />
+      <created>1730127872529</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1730127872529</updated>
+    </task>
+    <task id="LOCAL-00003" summary="new ui">
+      <option name="closed" value="true" />
+      <created>1730127995079</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1730127995079</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="test" />
-    <option name="LAST_COMMIT_MESSAGE" value="test" />
+    <MESSAGE value="new ui" />
+    <option name="LAST_COMMIT_MESSAGE" value="new ui" />
   </component>
 </project>

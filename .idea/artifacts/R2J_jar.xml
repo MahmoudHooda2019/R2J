@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="R2J:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/R2J_jar</output-path>
+    <root id="archive" name="R2J.jar">
+      <element id="module-output" name="R2J" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/steos/jnafilechooser/jnafilechooser-demo/1.1.2/jnafilechooser-demo-1.1.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/formdev/flatlaf/3.5.2/flatlaf-3.5.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/steos/jnafilechooser/jnafilechooser-win32/1.1.2/jnafilechooser-win32-1.1.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/miglayout/miglayout-core/5.2/miglayout-core-5.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/miglayout/miglayout-swing/5.2/miglayout-swing-5.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/steos/jnafilechooser/1.1.2/jnafilechooser-1.1.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/dev/jna/jna/5.13.0/jna-5.13.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/steos/jnafilechooser/jnafilechooser-api/1.1.2/jnafilechooser-api-1.1.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

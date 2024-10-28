@@ -1,164 +1,187 @@
 package me.aemo;
 
+import com.formdev.flatlaf.FlatLightLaf;
+import jnafilechooser.api.JnaFileChooser;
 import me.aemo.interfaces.ConvertListener;
 import me.aemo.interfaces.ReadFileListener;
 import me.aemo.interfaces.WriteFileListener;
+import me.aemo.ui.MyButton;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.*;
 import java.io.File;
+import java.net.URL;
+import java.util.concurrent.CompletableFuture;
 
 public class R2JGUI {
 
     private JFrame frame;
     private JTextField inputFileField;
     private JTextField packageNameField;
-    private JButton inputFileButton;
+    private MyButton inputFileButton;
+    private MyButton convertButton;
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new R2JGUI().createAndShowGUI());
+    public static void main(String[] args) throws UnsupportedLookAndFeelException {
+        UIManager.setLookAndFeel(new FlatLightLaf());
+        SwingUtilities.invokeLater(R2JGUI::new);
+    }
+
+    public R2JGUI() {
+        createAndShowGUI();
     }
 
     public void createAndShowGUI() {
-        // Setup JFrame
         frame = new JFrame("R2J Converter");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 200);
+        frame.setSize(600, 200);
         frame.setLayout(new GridBagLayout());
-
-        // Setup constraints
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Setup views
-        JLabel inputFileLabel = new JLabel("Input File:");
+        JLabel fileLabel = new JLabel("Select a R.txt file:");
         inputFileField = new JTextField();
-        inputFileButton = new JButton("Browse");
-        JLabel packageNameLabel = new JLabel("Package Name:");
+        inputFileField.setPreferredSize(new Dimension(250, 25));
+        inputFileButton = new MyButton("Browse");
+        inputFileButton.setRadius(25);
+        inputFileButton.setBorderColor(new Color(0xB0BEC5));
+        inputFileButton.setColorClick(new Color(0x0056B3));
+        inputFileButton.setColorOver(new Color(0x76C7FF));
+        inputFileButton.addActionListener(e -> openFileChooser());
+
+        JLabel packageLabel = new JLabel("Package Name:");
         packageNameField = new JTextField();
-        JButton convertButton = new JButton("Convert");
+        packageNameField.setPreferredSize(new Dimension(250, 25));
 
-        // Set font size for the labels
-        inputFileLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-        packageNameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        convertButton = new MyButton("Convert");
+        convertButton.setRadius(25);
+        convertButton.setBorderColor(new Color(0xB0BEC5));
+        convertButton.setColorClick(new Color(0x0056B3));
+        convertButton.setColorOver(new Color(0x76C7FF));
+        convertButton.addActionListener(e -> convert());
 
-        // Set preferred size and minimum size for the convertButton
-        convertButton.setPreferredSize(new Dimension(80, 30));
-        convertButton.setMinimumSize(new Dimension(80, 30));
-        convertButton.setFont(new Font("Arial", Font.PLAIN, 12));
-
-        // Setting constraints for the input file label
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 1;
-        gbc.weightx = 0.0;
-        frame.add(inputFileLabel, gbc);
+        frame.add(fileLabel, gbc);
 
-        // Setting constraints for the input file text field
         gbc.gridx = 1;
-        gbc.gridwidth = 2;
-        gbc.weightx = 1.0;
         frame.add(inputFileField, gbc);
 
-        // Setting constraints for the browse button
-        gbc.gridx = 3;
-        gbc.gridwidth = 1;
-        gbc.weightx = 0.0;
+        gbc.gridx = 2;
         frame.add(inputFileButton, gbc);
 
-        // Setting constraints for the package name label
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        gbc.weightx = 0.0;
-        frame.add(packageNameLabel, gbc);
+        frame.add(packageLabel, gbc);
 
-        // Setting constraints for the package name text field
         gbc.gridx = 1;
-        gbc.gridwidth = 2;
-        gbc.weightx = 1.0;
         frame.add(packageNameField, gbc);
 
-        // Setting constraints for the convert button
-        gbc.gridx = 1;
+        gbc.gridx = 0;
         gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        gbc.weightx = 1.0;
+        gbc.gridwidth = 3;
         gbc.anchor = GridBagConstraints.CENTER;
-        gbc.fill = GridBagConstraints.NONE;
         frame.add(convertButton, gbc);
 
-        // Action listeners
-        inputFileButton.addActionListener(e -> selectFile(inputFileField));
-        convertButton.addActionListener(e -> performConversion());
-
-        // Set up drag and drop
-        setupDragAndDrop(inputFileField);
-        setupDragAndDropForButton(inputFileButton);
-
-        // Explicitly set preferred size and location
-        frame.setPreferredSize(new Dimension(500, 200));
-        frame.pack();
-        frame.setLocationRelativeTo(null); // Center the frame on the screen
+        loadIcon();
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
+        // Enable drag-and-drop for the entire frame
+        enableDragAndDrop();
+        // Enable drag-and-drop for the input file field
+        enableDragAndDropForInputField();
     }
 
-    private void selectFile(JTextField textField) {
-        JFileChooser fileChooser = new JFileChooser();
-        int returnValue = fileChooser.showOpenDialog(frame);
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            textField.setText(fileChooser.getSelectedFile().getPath());
+    private void enableDragAndDrop() {
+        new DropTarget(frame, new DropTargetListener() {
+            @Override
+            public void dragEnter(DropTargetDragEvent dtde) {}
+
+            @Override
+            public void dragOver(DropTargetDragEvent dtde) {}
+
+            @Override
+            public void dropActionChanged(DropTargetDragEvent dtde) {}
+
+            @Override
+            public void dragExit(DropTargetEvent dte) {}
+
+            @Override
+            public void drop(DropTargetDropEvent dtde) {
+                handleDrop(dtde);
+            }
+        });
+    }
+
+    private void enableDragAndDropForInputField() {
+        new DropTarget(inputFileField, new DropTargetListener() {
+            @Override
+            public void dragEnter(DropTargetDragEvent dtde) {}
+
+            @Override
+            public void dragOver(DropTargetDragEvent dtde) {}
+
+            @Override
+            public void dropActionChanged(DropTargetDragEvent dtde) {}
+
+            @Override
+            public void dragExit(DropTargetEvent dte) {}
+
+            @Override
+            public void drop(DropTargetDropEvent dtde) {
+                handleDrop(dtde);
+            }
+        });
+    }
+
+    private void handleDrop(DropTargetDropEvent dtde) {
+        try {
+            dtde.acceptDrop(DnDConstants.ACTION_COPY);
+            java.util.List<File> droppedFiles = (java.util.List<File>) dtde.getTransferable()
+                    .getTransferData(DataFlavor.javaFileListFlavor);
+
+            for (File file : droppedFiles) {
+                if (file.getName().endsWith(".txt")) {
+                    inputFileField.setText(file.getAbsolutePath());
+                } else {
+                    showError("Please drop a valid .txt file.");
+                }
+            }
+            dtde.dropComplete(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            dtde.dropComplete(false);
         }
     }
 
-    private void setupDragAndDrop(JTextField textField) {
-        textField.setDropTarget(new DropTarget() {
-            @Override
-            public synchronized void drop(DropTargetDropEvent evt) {
-                try {
-                    evt.acceptDrop(DnDConstants.ACTION_COPY);
-                    java.util.List<File> droppedFiles = (java.util.List<File>) evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
-                    if (!droppedFiles.isEmpty()) {
-                        textField.setText(droppedFiles.get(0).getAbsolutePath());
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private void setupDragAndDropForButton(JButton button) {
-        button.setDropTarget(new DropTarget() {
-            @Override
-            public synchronized void drop(DropTargetDropEvent evt) {
-                try {
-                    evt.acceptDrop(DnDConstants.ACTION_COPY);
-                    java.util.List<File> droppedFiles = (java.util.List<File>) evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
-                    if (!droppedFiles.isEmpty()) {
-                        inputFileField.setText(droppedFiles.get(0).getAbsolutePath());
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private void performConversion() {
+    /*
+    private void convert() {
         String inputFile = inputFileField.getText();
-        String packageName = packageNameField.getText().trim(); // Get package name and trim any extra whitespace
+        String packageName = packageNameField.getText().trim();
 
         if (inputFile.isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "Please select an input file.", "Error", JOptionPane.ERROR_MESSAGE);
+            showError("Please select an input .txt file.");
             return;
         }
 
         File input = new File(inputFile);
         String outputFile = input.getParent() + File.separator + "R.java";
+
+
+        // Create and show a progress dialog
+        JDialog progressDialog = new JDialog(frame, "Converting...", true);
+        JProgressBar progressBar = new JProgressBar();
+        progressBar.setIndeterminate(true);
+        progressBar.setString("Processing...");
+        progressBar.setStringPainted(true);
+        progressDialog.getContentPane().add(progressBar);
+        progressDialog.setSize(300, 100);
+        progressDialog.setLocationRelativeTo(frame);
+        progressDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        progressDialog.setVisible(true); // Show dialog
 
         R2J.readTextFile(inputFile, new ReadFileListener() {
             @Override
@@ -169,32 +192,174 @@ public class R2JGUI {
                         R2J.writeJavaFile(outputFile, content, new WriteFileListener() {
                             @Override
                             public void onSuccess() {
+                                progressDialog.dispose();
                                 JOptionPane.showMessageDialog(frame, "Conversion completed successfully.\n" +
                                         "R.java has been created at: " + outputFile);
                             }
 
                             @Override
                             public void onError(String error) {
-                                errorMessageDialog("Write File Error", error);
+                                progressDialog.dispose();
+                                showError(error,"Write File Error");
                             }
                         });
                     }
 
                     @Override
                     public void onError(String error) {
-                        errorMessageDialog("Convert To Java Error", error);
+                        progressDialog.dispose();
+                        showError(error,"Convert To Java Error");
                     }
                 });
             }
 
             @Override
             public void onError(String error, String errorFrom) {
-                errorMessageDialog("Read File Error ~ " + errorFrom, error);
+                progressDialog.dispose();
+                showError("Read R Txt File Error", errorFrom + ": " + error);
             }
         });
     }
+    */
+    private void convert() {
+        String inputFile = inputFileField.getText();
+        String packageName = packageNameField.getText().trim();
 
-    private void errorMessageDialog(String title, String message){
+        if (inputFile.isEmpty()) {
+            showError("Please select an input .txt file.");
+            return;
+        }
+
+        File input = new File(inputFile);
+        String outputFile = input.getParent() + File.separator + "R.java";
+
+        // Create progress dialog
+        JDialog progressDialog = new JDialog(frame, "Converting...", true);
+        JProgressBar progressBar = new JProgressBar();
+        progressBar.setIndeterminate(true);
+        progressBar.setString("Processing...");
+        progressBar.setStringPainted(true);
+        progressDialog.getContentPane().add(progressBar);
+        progressDialog.setSize(300, 100);
+        progressDialog.setLocationRelativeTo(frame);
+        progressDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+
+        // Create and execute SwingWorker
+        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            private String error = null;
+            private String errorTitle = null;
+
+            @Override
+            protected Void doInBackground() {
+                try {
+                    // Step 1: Read file
+                    CompletableFuture<String> readFuture = new CompletableFuture<>();
+                    R2J.readTextFile(inputFile, new ReadFileListener() {
+                        @Override
+                        public void onSuccess(String content) {
+                            readFuture.complete(content);
+                        }
+
+                        @Override
+                        public void onError(String err, String errorFrom) {
+                            readFuture.completeExceptionally(
+                                    new Exception(errorFrom + ": " + err));
+                        }
+                    });
+
+                    String content = readFuture.get();
+
+                    // Step 2: Convert
+                    CompletableFuture<String> convertFuture = new CompletableFuture<>();
+                    R2J.convert(content, packageName, new ConvertListener() {
+                        @Override
+                        public void onSuccess(String converted) {
+                            convertFuture.complete(converted);
+                        }
+
+                        @Override
+                        public void onError(String err) {
+                            convertFuture.completeExceptionally(
+                                    new Exception("Convert Error: " + err));
+                        }
+                    });
+
+                    String convertedContent = convertFuture.get();
+
+                    // Step 3: Write file
+                    CompletableFuture<Void> writeFuture = new CompletableFuture<>();
+                    R2J.writeJavaFile(outputFile, convertedContent, new WriteFileListener() {
+                        @Override
+                        public void onSuccess() {
+                            writeFuture.complete(null);
+                        }
+
+                        @Override
+                        public void onError(String err) {
+                            writeFuture.completeExceptionally(
+                                    new Exception("Write Error: " + err));
+                        }
+                    });
+
+                    writeFuture.get();
+
+                } catch (Exception e) {
+                    error = e.getMessage();
+                    errorTitle = "Conversion Error";
+                }
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                progressDialog.dispose();
+                if (error != null) {
+                    showError(error, errorTitle);
+                } else {
+                    JOptionPane.showMessageDialog(frame,
+                            "Conversion completed successfully.\n" +
+                                    "R.java has been created at: " + outputFile);
+                }
+            }
+        };
+
+        // Start the worker
+        worker.execute();
+
+        // Show dialog after starting the worker
+        progressDialog.setVisible(true);
+    }
+    private void openFileChooser() {
+        JnaFileChooser fileChooser = new JnaFileChooser();
+        fileChooser.addFilter("","*.txt");
+
+        if (fileChooser.showOpenDialog(frame)) {
+            File selectedFile = fileChooser.getSelectedFile();
+            if (selectedFile != null) {
+                inputFileField.setText(selectedFile.getAbsolutePath());
+            } else {
+                showError("File selection was canceled.");
+            }
+        } else {
+            showSampleDialog("not file chooser.");
+        }
+    }
+
+    private void loadIcon() {
+        URL iconUrl = R2JGUI.class.getClassLoader().getResource("icon.png");
+        if (iconUrl != null) {
+            ImageIcon icon = new ImageIcon(iconUrl);
+            frame.setIconImage(icon.getImage());
+        }
+    }
+
+    private void showSampleDialog(String message){
+        JOptionPane.showMessageDialog(frame, message);
+    }
+    private void showError(String message) {
+        JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    private void showError(String message, String title) {
         JOptionPane.showMessageDialog(frame, message, title, JOptionPane.ERROR_MESSAGE);
     }
 }

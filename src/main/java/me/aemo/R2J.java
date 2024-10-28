@@ -10,26 +10,6 @@ import java.util.Map;
 
 public class R2J {
 
-    public static void main(String[] args) {
-        /*
-        if (args.length != 2) {
-            System.out.println("Usage: java R2J <input_file> <output_file>");
-            System.exit(1);
-        }
-
-        String inputFile = args[0];
-        String outputFile = args[1];
-
-        try {
-            String content = readFile(inputFile);
-            String rJavaContent = convertToRJava(content, "");
-            writeFile(outputFile, rJavaContent);
-            System.out.println("Conversion completed successfully. R.java has been created at: " + outputFile);
-        } catch (IOException e) {
-            System.err.println("Error: " + e.getMessage());
-        }
-        */
-    }
     public static void readTextFile(String filePath, ReadFileListener listener) {
         StringBuilder content = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
